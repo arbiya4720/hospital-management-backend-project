@@ -1,13 +1,22 @@
 import express  from "express";
 const app=express()
 import { AppDataSource } from "./DbConfig";
-AppDataSource.initialize().then(()=>{
-    console.log("database connected succesfully")
-}).catch((err:any)=>{
-    console.log(err);
-})
+import { route } from "./route/router";
+import dotenv from "dotenv"
+dotenv.config();
 
+const DB=async()=>{
+try{
+    await AppDataSource.initialize()
+    console.log("database connected")
+}
+catch(err){
+    console.log(err)
+}
+}
+DB()
+app.use(route)
 
-app.listen(9000,()=>{
-    console.log("server is running")
+app.listen(process.env.port,()=>{
+    console.log(`server is running on ${process.env.port}` )
 })
